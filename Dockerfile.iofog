@@ -1,0 +1,12 @@
+FROM node:alpine
+
+RUN mkdir -p /opt/app-root/
+WORKDIR /opt/app-root/
+
+ADD package.json /opt/app-root/
+RUN npm install
+COPY lib lib
+COPY bin bin
+COPY LICENSE LICENSE
+
+CMD ["node", "/opt/app-root/bin/iofog.js"]
