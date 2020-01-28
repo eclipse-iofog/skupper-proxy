@@ -27,7 +27,7 @@ async function fetchConfig() {
     })
 
     toAdd.forEach((mapping) => {
-      currentConfig[mapping] = proxy(mapping, 'localhost', networkRouter.host, networkRouter.port, false)
+      currentConfig[mapping] = proxy(mapping, 'localhost', { routerHost: networkRouter.host, routerPort: networkRouter.port, saslEnabled: false })
     })
   } catch (e) {
     console.error(e)
