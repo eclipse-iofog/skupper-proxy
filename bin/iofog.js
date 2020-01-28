@@ -2,12 +2,13 @@ const ioFogClient = require('@iofog/nodejs-sdk')
 const proxy = require('../lib/proxy').proxy
 
 const currentConfig = {}
-ioFogClient.init('iofog', 54321, null, main)
+ioFogClient.init('localhost', 54321, null, main)
 
 async function fetchConfig() {
   const configRequest = () => new Promise((resolve, reject) => {
     ioFogClient.getConfig({
       'onBadRequest': reject,
+      'onError': reject,
       'onNewConfig': resolve
     })
   })
