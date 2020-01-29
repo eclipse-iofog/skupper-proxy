@@ -20,6 +20,6 @@ if (process.env.ICPROXY_BRIDGE_HOST !== undefined) {
 
 var config = process.argv[2] || '';
 var bridgeconfigs = config.split(',');
-bridgeconfigs.forEach(function (bridgeconfig) { proxy(bridgeconfig, bridgehost); });
+bridgeconfigs.forEach(function (bridgeconfig) { proxy(bridgeconfig, bridgehost, { routerHost: bridgehost }); });
 
 
