@@ -22,7 +22,7 @@ async function fetchConfig() {
     const toAdd = mappings.filter((key) => !currentConfig[key])
 
     toDelete.forEach((mapping) => {
-      currentConfig[mapping].close()
+      currentConfig[mapping].stop()
       delete(currentConfig[mapping])
     })
 
