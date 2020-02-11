@@ -18,15 +18,23 @@ async function fetchConfig() {
     const mappings = config.mappings || []
     const networkRouter = config.networkRouter || {}
 
-    const toDelete = Object.keys(currentConfig).filter((key) => !mappings[key])
+    console.log('*** New Mappings: ', JSON.stringify(mappings))
+    console.log('*** Current Config: ', JSON.stringify(Object.keys(currentConfig)))
+    const toDelete = Object.keys(currentConfig).filter(key => !mappings.find(mapping => mapping === key))
+    console.log('*** To Delete: ', JSON.stringify(toDelete))
     const toAdd = mappings.filter((key) => !currentConfig[key])
+    console.log('*** To Add: ', JSON.stringify(toAdd))
 
     toDelete.forEach((mapping) => {
-      currentConfig[mapping].stop()
+      if (currentConfig[mapping].stop) {
+        console.log(`*** Closing connection for ${mapping}`)
+        currentConfig[mapping].stop()
+      }
       delete(currentConfig[mapping])
     })
 
     toAdd.forEach((mapping) => {
+      console.log(`*** Creating ${mapping}`)
       currentConfig[mapping] = proxy(mapping, 'localhost', { routerHost: networkRouter.host, routerPort: networkRouter.port, saslEnabled: false })
     })
   } catch (e) {
