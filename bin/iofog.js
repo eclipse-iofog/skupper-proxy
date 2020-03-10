@@ -1,5 +1,6 @@
 const ioFogClient = require('@iofog/nodejs-sdk')
 const proxy = require('../lib/proxy').proxy
+const log = require('../lib/log.js').logger()
 
 const currentConfig = {}
 ioFogClient.init('localhost', 54321, null, main)
@@ -18,23 +19,23 @@ async function fetchConfig() {
     const mappings = config.mappings || []
     const networkRouter = config.networkRouter || {}
 
-    console.log('*** New Mappings: ', JSON.stringify(mappings))
-    console.log('*** Current Config: ', JSON.stringify(Object.keys(currentConfig)))
+    log.info('*** New Mappings: ', JSON.stringify(mappings))
+    log.info('*** Current Config: ', JSON.stringify(Object.keys(currentConfig)))
     const toDelete = Object.keys(currentConfig).filter(key => !mappings.find(mapping => mapping === key))
-    console.log('*** To Delete: ', JSON.stringify(toDelete))
+    log.info('*** To Delete: ', JSON.stringify(toDelete))
     const toAdd = mappings.filter((key) => !currentConfig[key])
-    console.log('*** To Add: ', JSON.stringify(toAdd))
+    log.info('*** To Add: ', JSON.stringify(toAdd))
 
     toDelete.forEach((mapping) => {
       if (currentConfig[mapping].stop) {
-        console.log(`*** Closing connection for ${mapping}`)
+        log.info(`*** Closing connection for ${mapping}`)
         currentConfig[mapping].stop()
       }
       delete(currentConfig[mapping])
     })
 
     toAdd.forEach((mapping) => {
-      console.log(`*** Creating ${mapping}`)
+      log.info(`*** Creating ${mapping}`)
       currentConfig[mapping] = proxy(mapping, 'localhost', { routerHost: networkRouter.host, routerPort: networkRouter.port, saslEnabled: false })
     })
   } catch (e) {
