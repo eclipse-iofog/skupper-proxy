@@ -1,6 +1,6 @@
 FROM node:alpine
 
-ENV DEBUG=*
+ENV DEBUG=iofog
 ENV LOGLEVEL=debug
 
 RUN mkdir -p /opt/app-root/
