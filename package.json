@@ -8,7 +8,7 @@
         "url": "http://github.com/skupperproject/proxy"
     },
     "dependencies": {
-        "@iofog/nodejs-sdk": "^1.3.0",
+        "@iofog/nodejs-sdk": "1.3.0",
         "debug": "*",
         "rhea": "*"
     }

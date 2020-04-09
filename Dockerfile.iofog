@@ -1,7 +1,7 @@
 FROM node:alpine
 
 ENV DEBUG=iofog
-ENV LOGLEVEL=debug
+ENV LOGLEVEL=info
 
 RUN mkdir -p /opt/app-root/
 WORKDIR /opt/app-root/
