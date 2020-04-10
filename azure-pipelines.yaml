@@ -1,0 +1,40 @@
+trigger:
+  branches:
+    include:
+      - master
+  paths:
+    exclude:
+      - README.md
+pr: none
+
+variables:
+  repository: 'focal-freedom-236620/proxy'
+
+jobs:
+  - job: Build_x86
+    pool:
+      vmImage: 'Ubuntu-16.04'
+
+    steps:
+      - task: Docker@2
+        displayName: 'build and push docker image'
+        inputs:
+          containerRegistry: 'Edgeworx GCP'
+          repository: $(repository)
+          command: 'buildAndPush'
+          Dockerfile: 'Dockerfile.iofog'
+          tags: |
+            latest
+  - job: Build_ARM
+    pool: 'RPi'
+
+    steps:
+      - task: Docker@2
+        displayName: 'build and push docker image'
+        inputs:
+          containerRegistry: 'Edgeworx GCP'
+          repository: $(repository)-arm
+          command: 'buildAndPush'
+          Dockerfile: 'Dockerfile.iofog'
+          tags: |
+            latest
