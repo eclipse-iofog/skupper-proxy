@@ -4,30 +4,15 @@ parameters:
     default: X86
   - name: 'repository'
     type: string
+  - name: 'imageTag'
+    type: string
 
 variables:
   registry: 'Edgeworx DockerHub'
-  ref: $(Build.SourceBranch)
-  imageTag:
-  buildTag: $(Build.BuildId)
-  branchTag: $(Build.SourceBranchName)
 
 steps:
   - script: |
-      if [[ $(ref) == refs/tags* ]]; then
-        TAG=$(echo $(ref) | sed "s|refs/tags/v||g")
-        echo "##vso[task.setvariable variable=imageTag]$TAG"
-      else
-        LATESTTAG=$(git tag | tail -1)
-        LATESTVERS=${LATESTTAG#?}
-        if [ -z "$LATESTVERS" ]; then LATESTVERS=0.0.0; fi
-        echo "##vso[task.setvariable variable=imageTag]$LATESTVERS-b$(buildTag)"
-      fi
-      echo $(imageTag)
-    displayName: 'Set image tag'
-
-  - script: |
-      echo "${{ parameters.repository }}:$(imageTag)" > ${{ parameters.arch }}_DOCKER_IMAGE
+      echo "${{ parameters.repository }}:${{ parameters.imageTag }}" > ${{ parameters.arch }}_DOCKER_IMAGE
     displayName: 'Save Docker image name and tag to ${{ parameters.arch }}_DOCKER_IMAGE into artifacts'
 
   - task: CopyFiles@2
@@ -47,6 +32,6 @@ steps:
       command: 'buildAndPush'
       Dockerfile: 'Dockerfile.iofog'
       tags: |
-        $(imageTag)
-        $(branchTag)
+        ${{ parameters.imageTag }}
+        $(Build.SourceBranchName)
 
