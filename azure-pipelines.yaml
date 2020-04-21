@@ -8,7 +8,8 @@ trigger:
 pr: none
 
 variables:
-  repository: 'focal-freedom-236620/proxy'
+  repository: 'iofog/proxy'
+  registry: 'Edgeworx DockerHub'
 
 jobs:
   - job: Build_x86
@@ -19,12 +20,12 @@ jobs:
       - task: Docker@2
         displayName: 'build and push docker image'
         inputs:
-          containerRegistry: 'Edgeworx GCP'
+          containerRegistry: $(registry)
           repository: $(repository)
           command: 'buildAndPush'
           Dockerfile: 'Dockerfile.iofog'
           tags: |
-            latest
+            develop
   - job: Build_ARM
     pool: 'RPi'
 
@@ -32,9 +33,9 @@ jobs:
       - task: Docker@2
         displayName: 'build and push docker image'
         inputs:
-          containerRegistry: 'Edgeworx GCP'
+          containerRegistry: $(registry)
           repository: $(repository)-arm
           command: 'buildAndPush'
           Dockerfile: 'Dockerfile.iofog'
           tags: |
-            latest
+            develop
