@@ -4,7 +4,7 @@ parameters:
     default: X86
   - name: 'repository'
     type: string
-  - name: 'imageTags'
+  - name: 'imageTag'
     type: string
 
 steps:
@@ -28,5 +28,5 @@ steps:
       repository: ${{ parameters.repository }}
       command: 'buildAndPush'
       Dockerfile: 'Dockerfile.iofog'
-      tags: '${{ parameters.imageTags }}'
+      tags: '${{ parameters.imageTag }}'
 

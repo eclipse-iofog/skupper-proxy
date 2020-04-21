@@ -15,7 +15,6 @@ variables:
   imageTag:
   ref: $(Build.SourceBranch)
   buildTag: $(Build.BuildId)
-  branchTag: $(Build.SourceBranchName)
 
 stages:
   - stage: Preflight
@@ -48,9 +47,7 @@ stages:
             parameters:
               arch: 'X86'
               repository: 'iofog/proxy'
-              imageTags: |
-                $(imageTag))
-                $(branchTag)
+              imageTag: $(imageTag))
 
       - job: Build_ARM
         pool: 'RPi'
@@ -60,6 +57,4 @@ stages:
             parameters:
               arch: 'ARM'
               repository: 'iofog/proxy-arm'
-              imageTags: |
-                $(imageTag))
-                $(branchTag)
+              imageTag: $(imageTag))
