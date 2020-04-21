@@ -17,7 +17,7 @@ jobs:
       vmImage: 'Ubuntu-16.04'
 
     steps:
-      - template: pipeline.yml
+      - template: pipeline.yaml
         parameters:
           arch: 'X86'
           repository: 'iofog/proxy'
@@ -26,7 +26,7 @@ jobs:
     pool: 'RPi'
 
     steps:
-      - template: pipeline.yml
+      - template: pipeline.yaml
         parameters:
           arch: 'ARM'
           repository: 'iofog/proxy-arm'
