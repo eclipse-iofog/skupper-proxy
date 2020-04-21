@@ -24,17 +24,13 @@ stages:
           vmImage: 'Ubuntu-16.04'
         steps:
           - script: |
-              echo $(ref)
-
               if [[ $(ref) == refs/tags* ]]; then
                 TAG=$(echo $(ref) | sed "s|refs/tags/v||g")
-                echo "$TAG"
                 echo "##vso[task.setvariable variable=imageTag]$TAG"
               else
                 LATESTTAG=$(git tag | tail -1)
                 LATESTVERS=${LATESTTAG#?}
                 if [ -z "$LATESTVERS" ]; then LATESTVERS=0.0.0; fi
-                echo "$LATESTVERS-b$(buildTag)"
                 echo "##vso[task.setvariable variable=imageTag]$LATESTVERS-b$(buildTag)"
               fi
               echo "$(imageTag)"
@@ -51,7 +47,7 @@ stages:
             parameters:
               arch: 'X86'
               repository: 'iofog/proxy'
-              imageTag: $(imageTag))
+              imageTag: '$(imageTag)'
 
       - job: Build_ARM
         pool: 'RPi'
@@ -61,4 +57,4 @@ stages:
             parameters:
               arch: 'ARM'
               repository: 'iofog/proxy-arm'
-              imageTag: $(imageTag))
+              imageTag: '$(imageTag)'
