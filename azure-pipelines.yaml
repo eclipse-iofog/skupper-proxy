@@ -1,15 +1,15 @@
 trigger:
+  tags:
+    include:
+      - v*
   branches:
     include:
-      - master
+      - develop
+      - release*
   paths:
     exclude:
       - README.md
 pr: none
-
-variables:
-  repository: 'iofog/proxy'
-  registry: 'Edgeworx DockerHub'
 
 jobs:
   - job: Build_x86
@@ -17,25 +17,16 @@ jobs:
       vmImage: 'Ubuntu-16.04'
 
     steps:
-      - task: Docker@2
-        displayName: 'build and push docker image'
-        inputs:
-          containerRegistry: $(registry)
-          repository: $(repository)
-          command: 'buildAndPush'
-          Dockerfile: 'Dockerfile.iofog'
-          tags: |
-            develop
+      - template: pipeline.yml
+        parameters:
+          arch: 'X86'
+          repository: 'iofog/proxy'
+
   - job: Build_ARM
     pool: 'RPi'
 
     steps:
-      - task: Docker@2
-        displayName: 'build and push docker image'
-        inputs:
-          containerRegistry: $(registry)
-          repository: $(repository)-arm
-          command: 'buildAndPush'
-          Dockerfile: 'Dockerfile.iofog'
-          tags: |
-            develop
+      - template: pipeline.yml
+        parameters:
+          arch: 'ARM'
+          repository: 'iofog/proxy-arm'
