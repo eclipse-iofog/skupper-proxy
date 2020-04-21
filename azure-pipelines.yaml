@@ -12,8 +12,10 @@ trigger:
 pr: none
 
 variables:
-  registry: 'Edgeworx DockerHub'
   imageTag:
+  ref: $(Build.SourceBranch)
+  buildTag: $(Build.BuildId)
+  branchTag: $(Build.SourceBranchName)
 
 stages:
   - stage: Preflight
@@ -23,14 +25,14 @@ stages:
           vmImage: 'Ubuntu-16.04'
         steps:
           - script: |
-              if [[ $(Build.SourceBranch) == refs/tags* ]]; then
-                TAG=$(echo $(Build.SourceBranch) | sed "s|refs/tags/v||g")
+              if [[ $(ref) == refs/tags* ]]; then
+                TAG=$(echo $(ref) | sed "s|refs/tags/v||g")
                 echo "##vso[task.setvariable variable=imageTag]$TAG"
               else
                 LATESTTAG=$(git tag | tail -1)
                 LATESTVERS=${LATESTTAG#?}
                 if [ -z "$LATESTVERS" ]; then LATESTVERS=0.0.0; fi
-                echo "##vso[task.setvariable variable=imageTag]$LATESTVERS-b$(Build.BuildId)"
+                echo "##vso[task.setvariable variable=imageTag]$LATESTVERS-b$(buildTag)"
               fi
               echo $(imageTag)
             displayName: 'Set image tag'
@@ -46,7 +48,9 @@ stages:
             parameters:
               arch: 'X86'
               repository: 'iofog/proxy'
-              imageTag: $(imageTag))
+              imageTags: |
+                $(imageTag))
+                $(branchTag)
 
       - job: Build_ARM
         pool: 'RPi'
@@ -56,4 +60,6 @@ stages:
             parameters:
               arch: 'ARM'
               repository: 'iofog/proxy-arm'
-              imageTag: $(imageTag))
+              imageTags: |
+                $(imageTag))
+                $(branchTag)
