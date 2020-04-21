@@ -30,6 +30,6 @@ steps:
       command: 'buildAndPush'
       Dockerfile: 'Dockerfile.iofog'
       tags: |
-        '$(Build.SourceBranchName)'
-        '${{ parameters.imageTag }}'
+        $(Build.SourceBranchName)
+        ${{ parameters.imageTag }}
 
