@@ -16,52 +16,51 @@ variables:
   ref: $(Build.SourceBranch)
   buildTag: $(Build.BuildId)
 
-stages:
-  jobs:
-    - job: Initialize_Variables
-      pool:
-        vmImage: 'Ubuntu-16.04'
-      steps:
-        - script: |
-            if [[ $(ref) == refs/tags* ]]; then
-              TAG=$(echo $(ref) | sed "s|refs/tags/v||g")
-              echo "##vso[task.setvariable variable=imageTag]$TAG"
-            else
-              LATESTTAG=$(git tag | tail -1)
-              LATESTVERS=${LATESTTAG#?}
-              if [ -z "$LATESTVERS" ]; then LATESTVERS=0.0.0; fi
-              echo "##vso[task.setvariable variable=imageTag]$LATESTVERS-b$(buildTag)"
-            fi
-          displayName: 'Set image tag'
-        - script: |
-            echo $(imageTag)
-          displayName: 'Check image tag'
+jobs:
+  - job: Initialize_Variables
+    pool:
+      vmImage: 'Ubuntu-16.04'
+    steps:
+      - script: |
+          if [[ $(ref) == refs/tags* ]]; then
+            TAG=$(echo $(ref) | sed "s|refs/tags/v||g")
+            echo "##vso[task.setvariable variable=imageTag]$TAG"
+          else
+            LATESTTAG=$(git tag | tail -1)
+            LATESTVERS=${LATESTTAG#?}
+            if [ -z "$LATESTVERS" ]; then LATESTVERS=0.0.0; fi
+            echo "##vso[task.setvariable variable=imageTag]$LATESTVERS-b$(buildTag)"
+          fi
+        displayName: 'Set image tag'
+      - script: |
+          echo $(imageTag)
+        displayName: 'Check image tag'
 
-    - job: Build_x86
-      dependsOn: Initialize_Variables
-      pool:
-        vmImage: 'Ubuntu-16.04'
+  - job: Build_x86
+    dependsOn: Initialize_Variables
+    pool:
+      vmImage: 'Ubuntu-16.04'
 
-      steps:
-        - script: |
-            echo $(imageTag)
-          displayName: 'Check image tag'
-        - template: pipeline.yaml
-          parameters:
-            arch: 'X86'
-            repository: 'iofog/proxy'
-            imageTag: $(imageTag)
+    steps:
+      - script: |
+          echo $(imageTag)
+        displayName: 'Check image tag'
+      - template: pipeline.yaml
+        parameters:
+          arch: 'X86'
+          repository: 'iofog/proxy'
+          imageTag: $(imageTag)
 
-    - job: Build_ARM
-      dependsOn: Initialize_Variables
-      pool: 'RPi'
+  - job: Build_ARM
+    dependsOn: Initialize_Variables
+    pool: 'RPi'
 
-      steps:
-        - script: |
-            echo $(imageTag)
-          displayName: 'Check image tag'
-        - template: pipeline.yaml
-          parameters:
-            arch: 'ARM'
-            repository: 'iofog/proxy-arm'
-            imageTag: $(imageTag)
+    steps:
+      - script: |
+          echo $(imageTag)
+        displayName: 'Check image tag'
+      - template: pipeline.yaml
+        parameters:
+          arch: 'ARM'
+          repository: 'iofog/proxy-arm'
+          imageTag: $(imageTag)
