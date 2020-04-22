@@ -36,4 +36,4 @@ steps:
     inputs:
       PathtoPublish: '$(Build.ArtifactStagingDirectory)'
       ArtifactName: ${{ parameters.arch }}
-
+    displayName: 'publish artifacts'
