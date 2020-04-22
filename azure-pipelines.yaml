@@ -33,8 +33,10 @@ stages:
                 if [ -z "$LATESTVERS" ]; then LATESTVERS=0.0.0; fi
                 echo "##vso[task.setvariable variable=imageTag]$LATESTVERS-b$(buildTag)"
               fi
-              echo "$(imageTag)"
             displayName: 'Set image tag'
+          - script: |
+              echo $(imageTag)
+            displayName: 'Check image tag'
 
   - stage: Build
     jobs:
@@ -43,18 +45,24 @@ stages:
           vmImage: 'Ubuntu-16.04'
 
         steps:
+          - script: |
+              echo $(imageTag)
+            displayName: 'Check image tag'
           - template: pipeline.yaml
             parameters:
               arch: 'X86'
               repository: 'iofog/proxy'
-              imageTag: '$(imageTag)'
+              imageTag: $(imageTag)
 
       - job: Build_ARM
         pool: 'RPi'
 
         steps:
+          - script: |
+              echo $(imageTag)
+            displayName: 'Check image tag'
           - template: pipeline.yaml
             parameters:
               arch: 'ARM'
               repository: 'iofog/proxy-arm'
-              imageTag: '$(imageTag)'
+              imageTag: $(imageTag)
