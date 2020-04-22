@@ -32,4 +32,8 @@ steps:
       tags: |
         $(Build.SourceBranchName)
         ${{ parameters.imageTag }}
+  - task: PublishBuildArtifacts@1
+    inputs:
+      PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+      ArtifactName: ${{ parameters.arch }}
 

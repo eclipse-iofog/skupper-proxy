@@ -72,15 +72,3 @@ stages:
               arch: 'ARM'
               repository: 'iofog/proxy-arm'
               imageTag: $(imageTag)
-  
-  - stage: Publish
-    jobs:
-      - job: Publish_Artifacts
-        pool:
-          vmImage: 'Ubuntu-16.04'
-
-        steps:
-          - task: PublishBuildArtifacts@1
-            inputs:
-              PathtoPublish: '$(Build.ArtifactStagingDirectory)'
-              ArtifactName: 'skupper-proxy'
