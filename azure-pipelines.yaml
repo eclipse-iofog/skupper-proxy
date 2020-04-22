@@ -15,58 +15,67 @@ variables:
   ref: $(Build.SourceBranch)
   buildTag: $(Build.BuildId)
 
-jobs:
-  - job: Build_x86
-    pool:
-      vmImage: 'Ubuntu-16.04'
+stages:
+  - stage: Build
+    jobs:
+      - job: Build_x86
+        pool:
+          vmImage: 'Ubuntu-16.04'
 
-    variables:
-      imageTag:
+        variables:
+          imageTag:
 
+        steps:
+          - script: |
+              if [[ $(ref) == refs/tags* ]]; then
+                TAG=$(echo $(ref) | sed "s|refs/tags/v||g")
+                echo "##vso[task.setvariable variable=imageTag]$TAG"
+              else
+                LATESTTAG=$(git tag | tail -1)
+                LATESTVERS=${LATESTTAG#?}
+                if [ -z "$LATESTVERS" ]; then LATESTVERS=0.0.0; fi
+                echo "##vso[task.setvariable variable=imageTag]$LATESTVERS-b$(buildTag)"
+              fi
+            displayName: 'Set image tag'
+          - script: |
+              echo $(imageTag)
+            displayName: 'Check image tag'
+          - template: pipeline.yaml
+            parameters:
+              arch: 'X86'
+              repository: 'iofog/proxy'
+              imageTag: $(imageTag)
+
+      - job: Build_ARM
+        pool: 'RPi'
+
+        variables:
+          imageTag:
+
+        steps:
+          - script: |
+              if [[ $(ref) == refs/tags* ]]; then
+                TAG=$(echo $(ref) | sed "s|refs/tags/v||g")
+                echo "##vso[task.setvariable variable=imageTag]$TAG"
+              else
+                LATESTTAG=$(git tag | tail -1)
+                LATESTVERS=${LATESTTAG#?}
+                if [ -z "$LATESTVERS" ]; then LATESTVERS=0.0.0; fi
+                echo "##vso[task.setvariable variable=imageTag]$LATESTVERS-b$(buildTag)"
+              fi
+            displayName: 'Set image tag'
+          - script: |
+              echo $(imageTag)
+            displayName: 'Check image tag'
+          - template: pipeline.yaml
+            parameters:
+              arch: 'ARM'
+              repository: 'iofog/proxy-arm'
+              imageTag: $(imageTag)
+  
+  - stage: Publish
     steps:
-      - script: |
-          if [[ $(ref) == refs/tags* ]]; then
-            TAG=$(echo $(ref) | sed "s|refs/tags/v||g")
-            echo "##vso[task.setvariable variable=imageTag]$TAG"
-          else
-            LATESTTAG=$(git tag | tail -1)
-            LATESTVERS=${LATESTTAG#?}
-            if [ -z "$LATESTVERS" ]; then LATESTVERS=0.0.0; fi
-            echo "##vso[task.setvariable variable=imageTag]$LATESTVERS-b$(buildTag)"
-          fi
-        displayName: 'Set image tag'
-      - script: |
-          echo $(imageTag)
-        displayName: 'Check image tag'
-      - template: pipeline.yaml
-        parameters:
-          arch: 'X86'
-          repository: 'iofog/proxy'
-          imageTag: $(imageTag)
-
-  - job: Build_ARM
-    pool: 'RPi'
-
-    variables:
-      imageTag:
-
-    steps:
-      - script: |
-          if [[ $(ref) == refs/tags* ]]; then
-            TAG=$(echo $(ref) | sed "s|refs/tags/v||g")
-            echo "##vso[task.setvariable variable=imageTag]$TAG"
-          else
-            LATESTTAG=$(git tag | tail -1)
-            LATESTVERS=${LATESTTAG#?}
-            if [ -z "$LATESTVERS" ]; then LATESTVERS=0.0.0; fi
-            echo "##vso[task.setvariable variable=imageTag]$LATESTVERS-b$(buildTag)"
-          fi
-        displayName: 'Set image tag'
-      - script: |
-          echo $(imageTag)
-        displayName: 'Check image tag'
-      - template: pipeline.yaml
-        parameters:
-          arch: 'ARM'
-          repository: 'iofog/proxy-arm'
-          imageTag: $(imageTag)
+      - task: PublishBuildArtifacts@1
+        inputs:
+          PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+          ArtifactName: 'skupper-proxy'
