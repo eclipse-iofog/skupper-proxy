@@ -14,6 +14,7 @@ pr: none
 variables:
   ref: $(Build.SourceBranch)
   buildTag: $(Build.BuildId)
+  repository: 'focal-freedom-236620/proxy'
 
 jobs:
   - job: Build_x86
@@ -41,7 +42,7 @@ jobs:
       - template: pipeline.yaml
         parameters:
           arch: 'X86'
-          repository: 'iofog/proxy'
+          repository: $(repository)
           imageTag: $(imageTag)
 
   - job: Build_ARM
@@ -68,5 +69,5 @@ jobs:
       - template: pipeline.yaml
         parameters:
           arch: 'ARM'
-          repository: 'iofog/proxy-arm'
+          repository: $(repository)-arm
           imageTag: $(imageTag)
