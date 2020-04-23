@@ -9,8 +9,8 @@ parameters:
 
 steps:
   - script: |
-      echo "${{ parameters.repository }}:${{ parameters.imageTag }}" > ${{ parameters.arch }}_DOCKER_IMAGE
-      echo "${{ parameters.repository }}:${{ parameters.imageTag }}"
+      echo "gcr.io/${{ parameters.repository }}:${{ parameters.imageTag }}" > ${{ parameters.arch }}_DOCKER_IMAGE
+      echo "gcr.io/${{ parameters.repository }}:${{ parameters.imageTag }}"
     displayName: 'Save Docker image name and tag to ${{ parameters.arch }}_DOCKER_IMAGE into artifacts'
 
   - task: CopyFiles@2
