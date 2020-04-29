@@ -11,22 +11,63 @@ trigger:
       - README.md
 pr: none
 
+variables:
+  ref: $(Build.SourceBranch)
+  buildTag: $(Build.BuildId)
+  repository: 'focal-freedom-236620/proxy'
+
 jobs:
   - job: Build_x86
     pool:
       vmImage: 'Ubuntu-16.04'
 
+    variables:
+      imageTag:
+
     steps:
-      - template: pipeline.yml
+      - script: |
+          if [[ $(ref) == refs/tags* ]]; then
+            TAG=$(echo $(ref) | sed "s|refs/tags/v||g")
+            echo "##vso[task.setvariable variable=imageTag]$TAG"
+          else
+            LATESTTAG=$(git tag | tail -1)
+            LATESTVERS=${LATESTTAG#?}
+            if [ -z "$LATESTVERS" ]; then LATESTVERS=0.0.0; fi
+            echo "##vso[task.setvariable variable=imageTag]$LATESTVERS-b$(buildTag)"
+          fi
+        displayName: 'Set image tag'
+      - script: |
+          echo $(imageTag)
+        displayName: 'Check image tag'
+      - template: pipeline.yaml
         parameters:
           arch: 'X86'
-          repository: 'iofog/proxy'
+          repository: $(repository)
+          imageTag: $(imageTag)
 
   - job: Build_ARM
     pool: 'RPi'
 
+    variables:
+      imageTag:
+
     steps:
-      - template: pipeline.yml
+      - script: |
+          if [[ $(ref) == refs/tags* ]]; then
+            TAG=$(echo $(ref) | sed "s|refs/tags/v||g")
+            echo "##vso[task.setvariable variable=imageTag]$TAG"
+          else
+            LATESTTAG=$(git tag | tail -1)
+            LATESTVERS=${LATESTTAG#?}
+            if [ -z "$LATESTVERS" ]; then LATESTVERS=0.0.0; fi
+            echo "##vso[task.setvariable variable=imageTag]$LATESTVERS-b$(buildTag)"
+          fi
+        displayName: 'Set image tag'
+      - script: |
+          echo $(imageTag)
+        displayName: 'Check image tag'
+      - template: pipeline.yaml
         parameters:
           arch: 'ARM'
-          repository: 'iofog/proxy-arm'
+          repository: $(repository)-arm
+          imageTag: $(imageTag)
