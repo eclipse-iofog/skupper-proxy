@@ -1,5 +1,9 @@
 # Changelog
 
+## [v3.0.0-beta1] - 13 August 2021
+
+* No changes, synchronizing release with other projects
+
 ## [v3.0.0-alpha1] - 24 March 2021
 
 * No changes, synchronizing release with other projects 
