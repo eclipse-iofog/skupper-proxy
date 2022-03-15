@@ -17,7 +17,7 @@ variables:
   ref: $(Build.SourceBranch)
   buildTag: $(Build.BuildId)
   isRelease: $[startsWith(variables['Build.SourceBranch'], 'refs/tags/')]
-  version: ''
+  version: 'dev'
 
 stages:
 - stage: Build
