@@ -15,6 +15,7 @@ pr: none
 
 variables:
   ref: $(Build.SourceBranch)
+  commit: $(Build.SourceVersion)
   buildTag: $(Build.BuildId)
   isRelease: $[startsWith(variables['Build.SourceBranch'], 'refs/tags/')]
   version: 'dev'
