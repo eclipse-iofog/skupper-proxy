@@ -19,6 +19,8 @@ variables:
   buildTag: $(Build.BuildId)
   isRelease: $[startsWith(variables['Build.SourceBranch'], 'refs/tags/')]
   version: 'dev'
+  repository: 'focal-freedom-236620/proxy'
+  publicRepository: 'iofog/proxy'
 
 stages:
 - stage: Build
@@ -39,9 +41,6 @@ stages:
 
     pool: $(poolImageName)
 
-    variables:
-      repository: 'focal-freedom-236620/proxy'
-      publicRepository: 'iofog/proxy'
     steps:
     - template: pipeline/setversion.yaml
     - task: Docker@2
