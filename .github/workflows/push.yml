@@ -80,7 +80,7 @@ jobs:
         file: Dockerfile.iofog
         platforms: ${{ matrix.platforms }}
         push: true
-        outputs: type=image,name=target,annotation-index.org.opencontainers.image.description=proxy
+        outputs: type=image,name=target,annotation-index.org.opencontainers.image.description=Proxy
         tags: |
           ghcr.io/datasance/${{ env.IMAGE_NAME }}:${{ steps.tags.outputs.VERSION }}
           ghcr.io/datasance/${{ env.IMAGE_NAME }}:latest

@@ -11,5 +11,7 @@ RUN npm install
 COPY lib lib
 COPY bin bin
 COPY LICENSE LICENSE
-LABEL org.opencontainers.image.description proxy
+LABEL org.opencontainers.image.description Proxy
+LABEL org.opencontainers.image.source=https://github.com/datasance/skupper-proxy
+LABEL org.opencontainers.image.licenses=EPL2.0
 CMD ["node", "/opt/app-root/bin/iofog.js"]
