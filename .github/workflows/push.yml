@@ -75,15 +75,7 @@ jobs:
           ghcr.io/datasance/${{ env.IMAGE_NAME }}:${{ steps.tags.outputs.VERSION }}
           ghcr.io/datasance/${{ env.IMAGE_NAME }}:latest
           ghcr.io/datasance/${{ env.IMAGE_NAME }}:main
-
-    - name: Build and Push to ghcr
-      
-      uses: docker/build-push-action@v3
-      id: build_push_ghcr
-      with:
-        file: Dockerfile.iofog-arm
-        push: true
-        tags: |
           ghcr.io/datasance/${{ env.IMAGE_NAME }}-arm:${{ steps.tags.outputs.VERSION }}
           ghcr.io/datasance/${{ env.IMAGE_NAME }}-arm:latest
           ghcr.io/datasance/${{ env.IMAGE_NAME }}-arm:main
+
