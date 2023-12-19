@@ -11,5 +11,5 @@ RUN npm install
 COPY lib lib
 COPY bin bin
 COPY LICENSE LICENSE
-
+LABEL org.opencontainers.image.description proxy
 CMD ["node", "/opt/app-root/bin/iofog.js"]
