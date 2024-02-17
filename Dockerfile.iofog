@@ -1,16 +1,5 @@
-FROM node:hydrogen-alpine
+FROM iofog/proxy:latest
 
-ENV DEBUG=iofog
-ENV LOGLEVEL=info
-
-RUN mkdir -p /opt/app-root/
-WORKDIR /opt/app-root/
-
-ADD package.json /opt/app-root/
-RUN npm install
-COPY lib lib
-COPY bin bin
-COPY LICENSE LICENSE
 LABEL org.opencontainers.image.description Proxy
 LABEL org.opencontainers.image.source=https://github.com/datasance/skupper-proxy
 LABEL org.opencontainers.image.licenses=Apache-2.0
