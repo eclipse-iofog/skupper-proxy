@@ -1,4 +1,4 @@
-FROM node:dubnium-alpine3.11
+FROM registry.access.redhat.com/ubi8/nodejs-10
 
 ENV DEBUG=iofog
 ENV LOGLEVEL=info
@@ -13,5 +13,5 @@ COPY bin bin
 COPY LICENSE LICENSE
 LABEL org.opencontainers.image.description Proxy
 LABEL org.opencontainers.image.source=https://github.com/datasance/skupper-proxy
-LABEL org.opencontainers.image.licenses=Apache2.0
+LABEL org.opencontainers.image.licenses=Apache-2.0
 CMD ["node", "/opt/app-root/bin/iofog.js"]
