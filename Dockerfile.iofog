@@ -1,4 +1,4 @@
-FROM node:alpine
+FROM node:dubnium-alpine3.11
 
 ENV DEBUG=iofog
 ENV LOGLEVEL=info
