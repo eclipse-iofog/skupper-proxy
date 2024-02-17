@@ -1,4 +1,4 @@
-FROM registry.access.redhat.com/ubi8/nodejs-10
+FROM node:hydrogen-alpine
 
 ENV DEBUG=iofog
 ENV LOGLEVEL=info
