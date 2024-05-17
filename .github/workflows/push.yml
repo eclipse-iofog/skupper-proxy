@@ -21,14 +21,7 @@ env:
 
 jobs:
   build:
-    runs-on: ubuntu-20.04
-    strategy:
-      matrix:
-        platform:
-          - linux/amd64
-          - linux/arm/v6
-          - linux/arm/v7
-          - linux/arm64    
+    runs-on: ubuntu-20.04 
     permissions:
       actions: write
       checks: write
@@ -84,8 +77,7 @@ jobs:
       with:
         context: .
         file: Dockerfile.iofog
-        platforms: ${{ matrix.platform }}
-        provenance: false
+        platforms: linux/amd64, linux/arm/v6, linux/arm/v7, linux/arm64 
         push: true
         tags: |
           ghcr.io/datasance/${{ env.IMAGE_NAME }}:${{ steps.tags.outputs.VERSION }}
