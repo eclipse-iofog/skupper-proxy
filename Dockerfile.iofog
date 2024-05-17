@@ -1,4 +1,4 @@
-FROM registry.access.redhat.com/ubi8/nodejs-18
+FROM node:18-alpine3.18
 
 ENV DEBUG=iofog
 ENV LOGLEVEL=info
