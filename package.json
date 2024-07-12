@@ -10,6 +10,8 @@
     "dependencies": {
         "@iofog/nodejs-sdk": "3.0.0",
         "debug": "*",
-        "rhea": "*"
+        "rhea": "*",
+        "fs": "*",
+        "path": "*"
     }
 }
